@@ -1,48 +1,27 @@
+//Given an array and a number, return a random subset of an array with the length of the given number
 export const chooseRandom = (array, numItems) => {
-    //If array is undefined return an empty array
-    if(array === undefined) {
-        return []
-    }
-    //If the number given is invalid get a new random number
-    if(numItems === undefined || numItems < 1 || numItems > array.length) {
-        //numItems should be 1 to arraylength
-        numItems = Math.floor(Math.random() * array.length) + 1;
-        if(array.length == 0) {
-            numItems = 0
+    return (array === undefined) ?
+        [] //If array is undefined return an empty array
+        : (array.length < 2) ?
+            array //If array has the length of 0 or 1 just return the array
+            : randomShuffle(array, //If array has at least 1 elements Shuffle the array
+                (numItems === undefined || numItems < 1 || numItems > array.length) ?
+                    Math.floor(Math.random() * array.length) + 1 //If given number is invalid return a number between 1 and array length
+                    : numItems) //if valid return given number
+
+    //Given array and number (length)
+    function randomShuffle(array, n) {
+        //Get length of array
+        let pos = array.length
+        //Get a copy of array
+        let copyArray = array.slice()
+
+        //Go through and shuffle moving shuffled values to the back
+        for(let i = array.length - 1; array.length - i <= n; i--) {
+            copyArray[i] = copyArray.splice(Math.floor(Math.random() * pos--),1,copyArray[i])[0]
         }
-    }
-    //If the array length is less than 2 (1 or 0) just return
-    //  the given array
-    if(array.length < 2) {
-        return array
-    }
 
-    //Array to store the random array
-    let newArray = new Array(numItems)
-    //Array to store random index numbers
-    let randomIndices = new Array(numItems)
-
-    //Get the random indexes
-    for(let i = 0; i < randomIndices.length; i++) {
-        //get a random number
-        let index = Math.floor(Math.random() * array.length)
-        //If there is a repeat index get a new number
-        while(randomIndices.includes(index)) {
-            //Just increment
-            index++
-            if(index >= array.length) {
-                index = 0
-            }
-        }
-        //store the index
-        randomIndices[i] = index
+        //return shuffled variables of the correct length
+        return copyArray.splice(copyArray.length-n,n)
     }
-    
-    //Put the values into the new random array using the random indices
-    for(let i = 0; i < randomIndices.length; i++) {
-        newArray[i] = array[randomIndices[i]]
-    }
-
-    //return the new random array
-    return newArray
 }
